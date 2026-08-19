@@ -1,0 +1,112 @@
+.doctor-login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #1a1a2e;
+}
+
+.doctor-login-container {
+  background: #fff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-icon {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+}
+
+.doctor-login-container h2 {
+  font-size: 1.8rem;
+  color: #1a1a2e;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.login-subtitle {
+  text-align: center;
+  color: #888;
+  margin-bottom: 28px;
+  font-size: 0.9rem;
+}
+
+.login-error {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 0.88rem;
+  border: 1px solid #f5c6cb;
+}
+
+.doctor-login-form .form-group {
+  margin-bottom: 18px;
+}
+
+.doctor-login-form label {
+  display: block;
+  font-size: 0.85rem;
+  color: #555;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.doctor-login-form input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.doctor-login-form input:focus {
+  border-color: #0077b6;
+}
+
+.doctor-login-btn {
+  width: 100%;
+  padding: 12px;
+  background: #0077b6;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 8px;
+}
+
+.doctor-login-btn:hover:not(:disabled) {
+  background: #005f8a;
+}
+
+.doctor-login-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+}
+
+.login-link {
+  color: #0077b6;
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+.login-link:hover {
+  text-decoration: underline;
+}

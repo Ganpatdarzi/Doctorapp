@@ -1,0 +1,29 @@
+.d-reports-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.d-reports-filters {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.d-filter-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.d-filter-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.d-filter-actions {
+  flex-direction: row;
+  gap: 10px;
+}

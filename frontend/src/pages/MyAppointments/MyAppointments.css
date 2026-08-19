@@ -1,0 +1,141 @@
+.my-appointments-page {
+  padding: 32px 0 64px;
+  background: #f8fafc;
+  min-height: calc(100vh - 72px);
+}
+
+.my-appointments-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.my-appointments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.my-appointments-header h1 {
+  font-size: 1.8rem;
+  color: #0f172a;
+}
+
+.book-new-btn {
+  background: #0077b6;
+  color: #fff;
+  padding: 10px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.book-new-btn:hover {
+  background: #005f8a;
+}
+
+.tabs-container {
+  display: flex;
+  gap: 4px;
+  background: #fff;
+  padding: 6px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  margin-bottom: 28px;
+}
+
+.tab-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.tab-btn:hover {
+  color: #333;
+  background: #f8fafc;
+}
+
+.tab-btn.active {
+  background: #0077b6;
+  color: #fff;
+}
+
+.tab-count {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.tab-btn:not(.active) .tab-count {
+  background: #f0f0f0;
+  color: #888;
+}
+
+.consultation-type-filter {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.type-chip {
+  padding: 7px 16px;
+  border-radius: 20px;
+  border: 1.5px solid #e2e8f0;
+  background: #fff;
+  color: #64748b;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.type-chip:hover {
+  border-color: #0077b6;
+  color: #0077b6;
+}
+
+.type-chip.active {
+  background: #e8f4f8;
+  border-color: #0077b6;
+  color: #0077b6;
+}
+
+.appointments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.appointments-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 80px 0;
+  color: #64748b;
+}
+
+@media (max-width: 576px) {
+  .my-appointments-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+}

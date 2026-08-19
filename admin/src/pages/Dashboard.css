@@ -1,0 +1,50 @@
+.admin-dashboard h1 {
+  font-size: 1.8rem;
+  color: #1a1a2e;
+  margin-bottom: 24px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.stat-card {
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.stat-icon {
+  font-size: 2rem;
+  width: 56px;
+  height: 56px;
+  background: #e8f4f8;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-info h3 {
+  font-size: 1.6rem;
+  color: #1a1a2e;
+}
+
+.stat-info p {
+  color: #888;
+  font-size: 0.85rem;
+}
+
+.chart-box {
+  width: 100%;
+}
+
+.chart-box .recharts-wrapper {
+  font-family: inherit;
+}

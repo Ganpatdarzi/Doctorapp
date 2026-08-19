@@ -1,0 +1,243 @@
+/* Analytics module */
+
+.ana-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+  background: #fff;
+  border: 1px solid #e4e9f0;
+  border-radius: 12px;
+  padding: 12px 16px;
+}
+
+.ana-period-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.ana-period-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #667;
+  margin-right: 4px;
+}
+
+.ana-chip {
+  border: 1px solid #dfe4ec;
+  background: #f7f9fc;
+  color: #556;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ana-chip:hover {
+  border-color: #0077b6;
+  color: #0077b6;
+}
+
+.ana-chip.active {
+  background: #0077b6;
+  border-color: #0077b6;
+  color: #fff;
+}
+
+.ana-export-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ana-export {
+  border: none;
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 9px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.ana-export:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ana-export-pdf {
+  background: #dc3545;
+}
+.ana-export-pdf:hover {
+  background: #c82333;
+}
+.ana-export-xlsx {
+  background: #28a745;
+}
+.ana-export-xlsx:hover {
+  background: #218838;
+}
+.ana-export-csv {
+  background: #0077b6;
+}
+.ana-export-csv:hover {
+  background: #02699e;
+}
+
+/* KPI cards */
+.ana-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.ana-kpi {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  border: 1px solid #e4e9f0;
+  border-radius: 12px;
+  padding: 16px;
+  border-left: 4px solid #0077b6;
+}
+
+.ana-kpi-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  background: #eef6fb;
+  flex-shrink: 0;
+}
+
+.ana-kpi-blue { border-left-color: #0077b6; }
+.ana-kpi-blue .ana-kpi-icon { background: #e8f2fb; }
+.ana-kpi-green { border-left-color: #28a745; }
+.ana-kpi-green .ana-kpi-icon { background: #e9f7ee; }
+.ana-kpi-teal { border-left-color: #17a2b8; }
+.ana-kpi-teal .ana-kpi-icon { background: #e7f6f8; }
+.ana-kpi-purple { border-left-color: #6f42c1; }
+.ana-kpi-purple .ana-kpi-icon { background: #f0ebfb; }
+.ana-kpi-orange { border-left-color: #f0ad4e; }
+.ana-kpi-orange .ana-kpi-icon { background: #fdf3e4; }
+.ana-kpi-red { border-left-color: #dc3545; }
+.ana-kpi-red .ana-kpi-icon { background: #fcecee; }
+
+.ana-kpi-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ana-kpi-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #172b4d;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.ana-kpi-label {
+  font-size: 0.78rem;
+  color: #667788;
+  font-weight: 500;
+}
+
+.ana-kpi-sub {
+  font-size: 0.72rem;
+  color: #8a9bb0;
+  margin-top: 2px;
+}
+
+/* Charts grid */
+.ana-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.ana-grid .d-section {
+  margin-bottom: 0;
+}
+
+.ana-span-2 {
+  grid-column: 1 / -1;
+}
+
+.ana-chart {
+  height: 280px;
+}
+
+/* Completion rate cell */
+.ana-rate-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ana-rate-track {
+  width: 70px;
+  height: 7px;
+  background: #eef1f5;
+  border-radius: 999px;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.ana-rate-fill {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #0077b6, #00b894);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.ana-rate-value {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #445;
+}
+
+.ana-star {
+  color: #f5a623;
+}
+
+@media (max-width: 1200px) {
+  .ana-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 1100px) {
+  .ana-grid {
+    grid-template-columns: 1fr;
+  }
+  .ana-span-2 {
+    grid-column: 1;
+  }
+}
+
+@media (max-width: 560px) {
+  .ana-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+  .ana-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .ana-export-group {
+    flex-wrap: wrap;
+  }
+}

@@ -1,0 +1,242 @@
+.resched-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: resched-fade 0.2s ease;
+}
+
+@keyframes resched-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.resched-modal {
+  background: #ffffff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.25);
+  padding: 24px;
+  animation: resched-pop 0.25s ease;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@keyframes resched-pop {
+  from { transform: translateY(12px) scale(0.98); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.resched-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.resched-icon {
+  font-size: 28px;
+}
+
+.resched-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.resched-subtitle {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.resched-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 30px 0;
+  color: #64748b;
+}
+
+.resched-section {
+  margin-bottom: 18px;
+}
+
+.resched-section-title {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.resched-section-desc {
+  margin: -4px 0 10px;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.resched-date-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.resched-date-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 4px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.resched-date-card:hover:not(:disabled):not(.selected) {
+  border-color: #2563eb;
+}
+
+.resched-date-card.selected {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.resched-date-card.disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.resched-date-day {
+  font-size: 11px;
+  color: #64748b;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.resched-date-num {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.resched-date-card.selected .resched-date-num {
+  color: #2563eb;
+}
+
+.resched-date-month {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.resched-date-na {
+  font-size: 10px;
+  color: #94a3b8;
+}
+
+.resched-slot-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.resched-slot-btn {
+  padding: 9px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.resched-slot-btn:hover:not(.selected) {
+  border-color: #2563eb;
+  color: #2563eb;
+}
+
+.resched-slot-btn.selected {
+  border-color: #2563eb;
+  background: #2563eb;
+  color: #fff;
+}
+
+.resched-current {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f1f5f9;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.resched-current-label {
+  color: #64748b;
+}
+
+.resched-current-value {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.resched-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.resched-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.resched-cancel,
+.resched-submit {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.resched-cancel {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.resched-cancel:hover:not(:disabled) {
+  background: #cbd5e1;
+}
+
+.resched-submit {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.resched-submit:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.resched-submit:disabled,
+.resched-cancel:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

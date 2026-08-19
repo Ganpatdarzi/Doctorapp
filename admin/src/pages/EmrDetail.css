@@ -1,0 +1,85 @@
+.d-emr-pdf-block {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  background: #f8fafc;
+  border: 1px solid #eef2f7;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.d-emr-pdf-block strong {
+  font-size: 0.9rem;
+  color: #1a1a2e;
+}
+
+.d-emr-files {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.d-emr-file-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid #eef2f7;
+  border-radius: 10px;
+  background: #fbfcfe;
+  flex-wrap: wrap;
+}
+
+.d-emr-notes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.d-emr-note {
+  padding: 12px 14px;
+  border-left: 3px solid #0077b6;
+  background: #f8fafc;
+  border-radius: 0 10px 10px 0;
+}
+
+.d-emr-note p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #334155;
+}
+
+.d-emr-note span {
+  font-size: 0.76rem;
+  color: #94a3b8;
+  display: block;
+  margin-top: 6px;
+}
+
+.d-emr-note-form {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.d-emr-note-form .d-input {
+  flex: 1;
+}
+
+@media (max-width: 640px) {
+  .d-emr-note-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

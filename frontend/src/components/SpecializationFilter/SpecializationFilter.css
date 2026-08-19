@@ -1,0 +1,31 @@
+.specialization-filter {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 4px 0;
+}
+
+.filter-chip {
+  padding: 8px 18px;
+  border-radius: 50px;
+  border: 1.5px solid #e2e8f0;
+  background: #fff;
+  color: #555;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.filter-chip:hover {
+  border-color: #0077b6;
+  color: #0077b6;
+}
+
+.filter-chip.active {
+  background: #0077b6;
+  border-color: #0077b6;
+  color: #fff;
+}
