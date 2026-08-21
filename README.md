@@ -20,6 +20,12 @@ A full-stack platform where patients can find doctors, book clinic or **video co
 10. [AI Assistant](#ai-assistant)
 11. [Security & Performance](#security--performance)
 12. [Deployment](#deployment)
+    - [Live URLs](#live-urls)
+    - [Step-by-Step Guide](#step-by-step-deployment-guide)
+    - [Why Render Failed](#why-render-failed-and-what-we-learned)
+    - [MongoDB Atlas Connection Strings](#mongodb-atlas--direct-vs-srv-connection-strings)
+    - [Environment Variables Reference](#environment-variables-reference)
+    - [Auto-Deploy](#auto-deploy)
 13. [Troubleshooting](#troubleshooting)
 
 ---
@@ -385,26 +391,252 @@ A **local rules engine** (no external LLM key required) in `services/aiAssistant
 
 ## Deployment
 
-### Backend (Render / Railway / Fly.io / VPS)
+### Live URLs
 
-1. Set `NODE_ENV=production`, `MONGODB_URI` (Atlas or managed), and a strong `JWT_SECRET`.
-2. Set `CORS_ORIGINS` to your deployed frontends.
-3. Start with `npm start` (or your platform's Node entrypoint `server.js`).
+| App | Platform | URL |
+|-----|----------|-----|
+| Backend API | Railway | https://docbook-api-production.up.railway.app |
+| Patient Frontend | Vercel | https://frontend-bay-alpha-18.vercel.app |
+| Admin Portal | Vercel | https://admin-five-rho-74.vercel.app |
 
-### Frontends (Vercel / Netlify / any static host)
+### Architecture Overview
 
-```bash
-cd frontend && npm run build   # → dist/   (patient app)
-cd admin && npm run build      # → dist/   (admin app)
+```
+                          ┌─────────────────────────┐
+                          │     MongoDB Atlas (DB)   │
+                          └────────────┬────────────┘
+                                       │
+                          ┌────────────┴────────────┐
+                          │   Railway (Backend API)  │
+                          │   docbook-api-production │
+                          └──┬──────────────────┬───┘
+                             │                  │
+                ┌────────────┴──┐        ┌──────┴────────────┐
+                │  Vercel       │        │  Vercel            │
+                │  (Frontend)   │        │  (Admin Portal)    │
+                │  /frontend    │        │  /admin             │
+                └───────────────┘        └───────────────────┘
 ```
 
-Point the built `dist/` folders at your host. The apps read the API base URL from
-`src/utils/axiosClient.js` — set it to your deployed backend before building.
+All three apps are connected to the same GitHub repo (`Ganpatdarzi/Doctorapp`) and auto-deploy on push to `main`.
 
-### Reverse proxy (recommended)
+---
 
-Put the backend behind Nginx / Caddy with TLS. Because the backend sets
-`trust proxy` in production, `X-Forwarded-For` is respected for rate limiting.
+### Step-by-Step Deployment Guide
+
+#### Prerequisites
+
+- Node.js 18+ installed
+- A MongoDB Atlas account with a cluster created
+- A GitHub account
+- A Vercel account (free tier)
+- A Railway account (free $5/month credit)
+
+---
+
+#### Step 1 — Set Up MongoDB Atlas
+
+1. Go to [cloud.mongodb.com](https://cloud.mongodb.com) and log in.
+2. Create a cluster (Free M0 tier works).
+3. Create a database user: **Database Access** → Add a new user with username/password.
+4. Set network access: **Network Access** → **Add IP Address** → **"Allow Access from Anywhere"** (`0.0.0.0/0`).
+   > **Critical:** If you only add your local IP, cloud servers (Railway/Vercel) will be blocked.
+5. Get your connection string: **Connect** → **Drivers** → select Node.js → copy the URI.
+6. Add your database name after `.net/`:
+   ```
+   mongodb+srv://<user>:<password>@<cluster>.mongodb.net/doctor-appointment?retryWrites=true&w=majority
+   ```
+
+---
+
+#### Step 2 — Push to GitHub
+
+```bash
+git init
+git add .
+git commit -m "Initial commit"
+git remote add origin https://github.com/<your-username>/<repo>.git
+git push -u origin main
+```
+
+Make sure `.gitignore` excludes `backend/.env`, `node_modules/`, `uploads/`, and `medical-files/`.
+
+---
+
+#### Step 3 — Deploy Backend on Railway
+
+**Why Railway?** We originally tried Render, but it now requires a credit card even for the free tier. Railway provides $5/month free credit with no card required.
+
+**Why a Dockerfile?** Railway's new build system (Railpack) requires a `package.json` at the repo root to detect Node.js. Since this is a monorepo with separate `backend/`, `frontend/`, and `admin/` directories, we use a Dockerfile that builds only the backend:
+
+```dockerfile
+FROM node:20-alpine
+WORKDIR /app
+COPY backend/package*.json ./
+RUN npm install --production
+COPY backend/ .
+EXPOSE 5000
+CMD ["node", "server.js"]
+```
+
+**Steps:**
+
+1. Install Railway CLI:
+   ```bash
+   npm install -g @railway/cli
+   ```
+
+2. Log in:
+   ```bash
+   railway login
+   ```
+
+3. Create a project and service:
+   ```bash
+   railway init --name docbook-api
+   railway add --repo <your-username>/<repo> --branch main --service docbook-api
+   ```
+
+4. Set environment variables:
+   ```bash
+   railway variable set \
+     "NODE_ENV=production" \
+     "MONGODB_URI=mongodb+srv://<user>:<password>@<cluster>.mongodb.net/doctor-appointment?retryWrites=true&w=majority" \
+     "JWT_SECRET=<generate-a-strong-secret>" \
+     "JWT_EXPIRE=7d" \
+     "ADMIN_EMAIL=admin@example.com" \
+     "ADMIN_PASSWORD=admin123" \
+     "FRONTEND_URL=https://<your-frontend>.vercel.app" \
+     "CORS_ORIGINS=https://<your-frontend>.vercel.app,https://<your-admin>.vercel.app"
+   ```
+
+5. Deploy:
+   ```bash
+   railway up --service docbook-api
+   ```
+
+6. Generate a public domain:
+   ```bash
+   railway domain --service docbook-api
+   ```
+   This gives you a URL like `https://docbook-api-production.up.railway.app`.
+
+7. Verify:
+   ```bash
+   curl https://docbook-api-production.up.railway.app/
+   # → {"success":true,"message":"Doctor Appointment Booking API is running"}
+   ```
+
+---
+
+#### Step 4 — Deploy Frontend on Vercel
+
+1. Install Vercel CLI:
+   ```bash
+   npm install -g vercel
+   ```
+
+2. From the `frontend/` directory:
+   ```bash
+   cd frontend
+   vercel deploy --prod
+   ```
+
+3. Set the API URL environment variable:
+   ```bash
+   echo "https://docbook-api-production.up.railway.app/api" | \
+     vercel env add VITE_API_URL production
+   ```
+
+4. Redeploy to bake in the env var (Vite inlines `import.meta.env` at build time):
+   ```bash
+   vercel deploy --prod
+   ```
+
+---
+
+#### Step 5 — Deploy Admin Portal on Vercel
+
+Same process as the frontend:
+```bash
+cd admin
+vercel deploy --prod
+
+echo "https://docbook-api-production.up.railway.app/api" | \
+  vercel env add VITE_API_URL production
+
+vercel deploy --prod
+```
+
+---
+
+#### Step 6 — Update Backend CORS
+
+After the frontend/admin are deployed, update the backend with the actual URLs:
+
+```bash
+railway variable set \
+  "FRONTEND_URL=https://<your-frontend>.vercel.app" \
+  "CORS_ORIGINS=https://<your-frontend>.vercel.app,https://<your-admin>.vercel.app" \
+  --service docbook-api
+```
+
+Railway auto-redeploys on variable changes.
+
+---
+
+### Why Render Failed (and What We Learned)
+
+| Step | What Happened | Root Cause | Solution |
+|------|--------------|------------|----------|
+| **SRV DNS** | `querySrv ECONNREFUSED _mongodb._tcp.doctorapp.fhscnms.mongodb.net` | The local DNS resolver (`192.168.0.1`) couldn't resolve MongoDB Atlas SRV records | Added `dns.setServers(["8.8.8.8"])` in `db.js` to use Google DNS |
+| **IP Whitelist** | `Could not connect to any servers in your MongoDB Atlas cluster` | Atlas only had the local IP whitelisted; cloud servers were blocked | Set Atlas Network Access to `0.0.0.0/0` |
+| **Render API** | `Payment information is required` | Render now requires a credit card even for the Free plan | Switched to **Railway** ($5 free credit, no card) |
+| **Railway Build 1** | `npm: command not found` | Railway's Railpack couldn't detect Node.js — no `package.json` at repo root | Created a `Dockerfile` to explicitly build from `backend/` |
+| **Railway Build 2** | `Railpack could not determine how to build the app` | Same root cause — monorepo without a root `package.json` | Dockerfile approach solved this |
+
+### MongoDB Atlas — Direct vs SRV Connection Strings
+
+The DNS SRV issue affects Docker containers and some Windows systems. Two approaches:
+
+**Option A — SRV string (simpler, needs DNS fix):**
+```
+mongodb+srv://<user>:<password>@<cluster>.mongodb.net/doctor-appointment?retryWrites=true&w=majority
+```
+
+**Option B — Direct string (works everywhere, no DNS issues):**
+```
+mongodb://<user>:<password>@shard-00-00.xxxxx.mongodb.net:27017,shard-00-01.xxxxx.mongodb.net:27017,shard-00-02.xxxxx.mongodb.net:27017/doctor-appointment?retryWrites=true&w=majority&authSource=admin
+```
+
+The direct string bypasses SRV resolution entirely. Use `nslookup -type=SRV _mongodb._tcp.<cluster>` to discover your shard hostnames.
+
+> **Note:** The `dns.setServers(["8.8.8.8"])` fix in `backend/config/db.js` handles the SRV issue for local development. For production Docker builds, the direct connection string is more reliable.
+
+---
+
+### Environment Variables Reference
+
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `PORT` | No | `5000` | Server port (Railway sets this automatically) |
+| `NODE_ENV` | Yes | `development` | Set to `production` for deployed environments |
+| `MONGODB_URI` | Yes | — | MongoDB connection string |
+| `JWT_SECRET` | Yes | — | Strong random string for JWT signing |
+| `JWT_EXPIRE` | No | `7d` | Token expiry duration |
+| `ADMIN_EMAIL` | No | `admin@example.com` | Default admin email |
+| `ADMIN_PASSWORD` | No | `admin123` | Default admin password |
+| `FRONTEND_URL` | Yes | `http://localhost:5173` | Deployed frontend URL for CORS |
+| `CORS_ORIGINS` | No | — | Comma-separated extra allowed origins |
+| `VITE_API_URL` | Yes (frontend) | `http://localhost:5000/api` | Backend API URL (Vercel env var) |
+
+---
+
+### Auto-Deploy
+
+Both Railway and Vercel are connected to the GitHub repo. Every push to `main` triggers:
+- **Railway** → rebuilds the Docker image and redeploys the backend
+- **Vercel** → rebuilds the frontend/admin with latest code
 
 ---
 
@@ -412,13 +644,16 @@ Put the backend behind Nginx / Caddy with TLS. Because the backend sets
 
 | Problem | Fix |
 |---------|-----|
-| `MongoDB connection error` | Ensure MongoDB is running or fix `MONGODB_URI`. |
-| CORS errors from the frontend | Add the frontend origin to `CORS_ORIGINS` (dev ports are pre-allowed). |
-| Login returns 429 | You hit the auth rate limit — wait a minute (or raise `RATE_LIMIT_AUTH_MAX`). |
-| `npm run seed` removed doctors | Never run it against real data; it resets doctor collections. |
-| Stripe checkout fails | `STRIPE_SECRET_KEY` empty → demo mode auto-confirms payments. Add test keys for live flows. |
-| Emails not sending | Empty `SMTP_*` → emails are logged to the console instead. |
-| Port 5000 already in use | Change `PORT` or kill the stale `node server.js` process. |
+| `querySrv ECONNREFUSED` | DNS SRV resolution failing — use direct connection string or add `dns.setServers(["8.8.8.8"])` |
+| `Could not connect to any servers` | Atlas IP not whitelisted — set Network Access to `0.0.0.0/0` |
+| `application failed to respond` (502) | Backend crashed — check Railway logs with `railway logs` |
+| Vercel shows `localhost:5000/api` | `VITE_API_URL` not set at build time — set it and redeploy |
+| CORS errors from the frontend | Add the frontend origin to `CORS_ORIGINS` (dev ports are pre-allowed) |
+| Login returns 429 | Auth rate limit hit — wait a minute (or raise `RATE_LIMIT_AUTH_MAX`) |
+| `npm run seed` removed doctors | Never run it against real data — it resets doctor collections |
+| Stripe checkout fails | `STRIPE_SECRET_KEY` empty → demo mode auto-confirms payments |
+| Emails not sending | Empty `SMTP_*` → emails are logged to the console instead |
+| Port 5000 already in use | Change `PORT` or kill the stale process |
 
 ---
 
